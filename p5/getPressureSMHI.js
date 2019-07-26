@@ -8,24 +8,35 @@ function preload() {
 
 function setup() {
   createCanvas(400, 400);
-  noLoop();
+  //noLoop();
 
-
+  //getting the hour to retrieve the data from
   var r = getRetrieveHour(hour());
   console.log("RETRIEVE HOUR IS " + r);
 
+  //Only for developing
   var staticPressure = weatherData.timeSeries[r].parameters[10].values[0];
   console.log("Static pressure: " + staticPressure);
 
-
+  //Getting the right pressure im Mercury
   var pressure = getPressure(r);
-
   console.log("Current pressure is: " + pressure);
+
+  var mercury = hpaToMercury(pressure);
+  console.log("Mercury is " + mercury);
+
+  stateHandler(mercury);
+
+  console.log("1035 in mercery is " + hpaToMercury(1035));
+
 
 }
 
 function draw() {
 
+if((hour() == 01) || (hour() == 09) || (hour() == 17)){
+  updatePage();
+}
 
 }
 
@@ -75,4 +86,40 @@ function getPressure(retrieveHour){
 }
 
   return pressure;
+}
+
+function hpaToMercury(hpa){
+return hpa * 0.75006375541921;
+}
+
+function stateHandler(currentPressure){
+
+if(currentPressure < 746){
+  drawRegn();
+}
+else if (currentPressure > 774){
+  drawVackert();
+}else{
+  drawOstadigt();
+}
+
+}
+
+
+function drawRegn(){
+  console.log(" -- REGN -- ");
+}
+
+function drawOstadigt(){
+  console.log(" -- OSTADIGT -- ");
+}
+
+function drawVackert(){
+  console.log(" -- VACKERT -- ");
+}
+
+function updatePage(){
+  var currentPressure = getPressure(0);
+  stateHandler(hpaToMercury(currentPressure));
+  console.log("Updated Page");
 }
