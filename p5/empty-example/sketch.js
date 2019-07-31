@@ -3,40 +3,42 @@
 // https://tttapa.github.io/ESP8266/Chap14%20-%20WebSocket.html
 //https://tttapa.github.io/ESP8266/Chap09%20-%20Web%20Server.html
 //https://www.smhi.se/kunskapsbanken/hur-mats-lufttryck-1.23830
-//
 
+//https://p5js.org/examples/math-sine-wave.html
+// https://p5js.org/examples/math-noise-wave.html?source=post_page---------------------------
+// https://www.openprocessing.org/sketch/612834/
+// https://www.openprocessing.org/sketch/182402
+// https://www.openprocessing.org/sketch/202174
+//https://gamedevelopment.tutsplus.com/tutorials/make-a-splash-with-dynamic-2d-water-effects--gamedev-236
 
-let weather;
-function preload() {
-  // Get the most recent earthquake in the database
-  let url =
-   'https://api.openweathermap.org/data/2.5/weather?q=Gothenburg,swe&appid=511178ef1b4a771e21e1e5d3c42da50d';
-  weatherData = loadJSON(url);
+var sound;
+
+function preload(){
+  sound = loadSound("message1.mp3");
 }
+
 
 function setup() {
-  noLoop();
-}
+  createCanvas(600,600);
 
-function draw() {
-
-
-  let pressure = weatherData.main.pressure;
-
-  text(pressure, 10, 30);
+  textFont("Arial");
+textSize(22);
 
 }
 
+function draw(){
+  background(200);
+    text("Regn", 200, 200);
 
-/*
-Att göra...
-- Kolla på hur man uppdaterar väderdatan!
-- Skapa GIT och pusha upp både Arduinon och p5.js
+}
 
+function mousePressed() {
+/*  if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 100) {
+    let fs = fullscreen();
+    fullscreen(!fs);
+  }
+  */
 
+sound.play();
 
-
-
-
-
-*/
+}
