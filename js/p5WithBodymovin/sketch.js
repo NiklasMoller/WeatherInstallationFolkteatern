@@ -1,7 +1,16 @@
 var sound;
-
 var anim;
 var animData;
+
+const vackertInFrame = 0;
+const vackertOutFrame = 1190;
+
+const regnInFrame = 1160;
+const regnOutFrame = 2230;
+
+const ostadigtInFrame = 2160;
+const ostadigtOutFrame = 3560;
+
 
 var stateflag;
 const regnFlag = 1;
@@ -30,19 +39,33 @@ sound.play();
 loadAnim();
 anim.play();
 
-i = 1;
+i = 2;
+
+if(i==vackertFlag){
+  anim.goToAndPlay(vackertInFrame, true);
+}
+else if(i==regnFlag){
+  anim.goToAndPlay(regnInFrame, true);
+}
+else if(i==ostadigtFlag){
+  anim.goToAndPlay(ostadigtInFrame, true);
+}
+
 }
 
 function draw(){
 
-/*
-if((anim.currentFrame > 120) && (i==0)){
-  anim.goToAndPlay(0, true);
+
+if((anim.currentFrame > vackertOutFrame) && (i==0)){
+  anim.goToAndPlay(vackertInFrame, true);
 }
-else if((anim.currentFrame > 240) && (i==1)){
-  anim.goToAndPlay(140, true);
+else if((anim.currentFrame > regnOutFrame) && (i==1)){
+  anim.goToAndPlay(regnInFrame, true);
 }
-*/
+else if((anim.currentFrame > ostadigtOutFrame) && (i==2)){
+  anim.goToAndPlay(ostadigtInFrame, true);
+}
+
 
 }
 
