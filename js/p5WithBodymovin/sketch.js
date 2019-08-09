@@ -18,7 +18,7 @@ function preload(){
     renderer: 'svg',
     loop: true,
     autoplay: false,
-    path: 'data.json'
+    path: 'laterFinal5aug.json'
     };
 }
 
@@ -34,13 +34,15 @@ i = 1;
 }
 
 function draw(){
- 
+
+/*
 if((anim.currentFrame > 120) && (i==0)){
   anim.goToAndPlay(0, true);
 }
 else if((anim.currentFrame > 240) && (i==1)){
   anim.goToAndPlay(140, true);
 }
+*/
 
 }
 
