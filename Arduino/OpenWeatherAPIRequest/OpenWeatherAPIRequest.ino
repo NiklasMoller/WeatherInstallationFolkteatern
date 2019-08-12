@@ -55,7 +55,7 @@ void setup() {
 
   pressure = 0;
 
-  servo.attach(2); // attaches the servo on GIO2 to the servo object
+  servo.attach(2); // attaches the servo on GPIO2 to the servo object
   delay(200);
 }
 
@@ -72,7 +72,7 @@ void loop() {
 */
 
 
-
+/*
     Serial.print("PREASSURE IS: ");
     Serial.println(getPressure());
 
@@ -83,14 +83,24 @@ void loop() {
     Serial.print("PREASSURE IS: ");
     Serial.println(getPressure());
 
-    servo.write(180);
-    delay(1000);
-    servo.write(0);
-    delay(1000);
+*/
 
-    Serial.println("I'm awake but now I will sleep. GOODNIGHT!");
-    ESP.deepSleep(20e6, WAKE_RF_DEFAULT);
-    delay(100);
+
+
+    servo.write(180);
+    Serial.println("Wrote to 180");
+    delay(3000);
+    servo.write(0);
+    Serial.println("Wrote to 0");
+    delay(3000);
+
+    servo.write(90);
+    Serial.println("Wrote to 90");
+    delay(3000);
+
+    //Serial.println("I'm awake but now I will sleep. GOODNIGHT!");
+    ESP.deepSleep(10e6, WAKE_RF_DEFAULT);
+    delay(2000);
     
 }
 

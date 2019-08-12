@@ -35,6 +35,7 @@ function preload(){
 function setup() {
 
 sound.play();
+sound.setLoop(true);
 
 loadAnim();
 anim.play();
