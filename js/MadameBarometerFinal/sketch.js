@@ -1,11 +1,6 @@
 var link = "https://opendata-download-metanalys.smhi.se/api/category/mesan1g/version/2/geotype/point/lon/11.952311/lat/57.700728/data.json";
 
-var pressure;
-
-var sound;
-
-var anim;
-var animData;
+var pressure, sound, anim, animData, stateflag, loopCounter, weatherData, counter;
 
 const vackertInFrame = 0;
 const vackertOutFrame = 1190;
@@ -14,15 +9,15 @@ const regnInFrame = 1160;
 const regnOutFrame = 2230;
 
 const ostadigtInFrame = 2160;
-const ostadigtOutFrame = 3560;
+const ostadigtOutFrame = 3400;
 
-
-var stateflag;
 const regnFlag = 1;
 const ostadigtFlag = 2;
 const vackertFlag = 3;
 
-var currentTime;
+const numberOfLoopIterations = 5;
+
+const toMercury = 0.75006375541921;
 
 function preload(){
   sound = loadSound("testSong.mp3");
@@ -44,45 +39,49 @@ function setup() {
 setPressure();
 
 sound.play();
+sound.setVolume(0.5);
 sound.setLoop(true);
 
 loadAnim();
 playHandler();
 
-setCurrentTime();
-//anim.play();
+loopCounter = 0;
 
 }
 
 function draw(){
 
-  if(getCurrentTime < day()+ '' + hour()  +'' + minute()){
-    console.log("About to update");
-    update();
-  }
-
 if((anim.currentFrame > vackertOutFrame) && (stateflag==vackertFlag)){
   playVackert();
+  loopCounter++;
+  checkForUpdate(loopCounter);
 }
 else if((anim.currentFrame > regnOutFrame) && (stateflag==regnFlag)){
   playRegn();
+  loopCounter++;
+  checkForUpdate(loopCounter);
 }
 else if((anim.currentFrame > ostadigtOutFrame) && (stateflag==ostadigtFlag)){
   playOstadigt();
+  loopCounter++;
+  checkForUpdate(loopCounter);
 }
 
-var t = getCurrentTime();
-console.log(t);
 
+}
 
-
+function checkForUpdate(lc){
+  if(lc > numberOfLoopIterations){
+    console.log("About to update");
+    update();
+    loopCounter = 0;
+}
 }
 
 function update(){
   loadWeatherData();
-  setPressure();
-  setCurrentTime();
-  playHandler();
+  setTimeout(function(){ setPressure(); }, 4000); //Delay to let JSON data load
+  setTimeout(function(){ setStateflag(); }, 5000);
 }
 
 
@@ -101,13 +100,13 @@ function loadWeatherData(){
 
 function setPressure(){
 
-var counter = 0;
+counter = 0;
 
 do{
 
-pressure = weatherData.timeSeries[counter].parameters[10].values[0] * 0.75006375541921; //0.75006375541921 is to convert air pressure from hpa to mercery
+pressure = weatherData.timeSeries[counter].parameters[10].values[0] * toMercury; // Convert air pressure from hpa to mercery
 
-counter ++;
+counter++;
 
 if(counter > 22){
   break;
@@ -116,7 +115,7 @@ if(counter > 22){
 }while(pressure < 1);
 
 console.log("Pressure set to " + pressure);
-console.log("counter is " + counter);
+console.log("Weather Data is from " + counter + " hour ago");
 
 }
 
@@ -124,43 +123,49 @@ function getPressure(){
   return pressure;
 }
 
-function playHandler(){
-
+function setStateflag(){
   if(getPressure() < 749){
-    console.log("In playHandler() about to play regn");
     stateflag = regnFlag;
-    playRegn();
   }
   else if (getPressure() > 771){
-    console.log("In playHandler() about to play vackert");
     stateflag = vackertFlag;
-    playVackert();
   }else{
-    console.log("In playHandler() about to play ostadigt");
     stateflag = ostadigtFlag;
+  }
+}
+
+function playHandler(){
+
+  setStateflag();
+
+  if(stateflag == regnFlag){
+    console.log("In playHandler() about to play regn");
+    playRegn();
+  }
+  else if (stateflag == vackertFlag){
+    console.log("In playHandler() about to play vackert");
+    playVackert();
+  }else if (stateflag == ostadigtFlag){
+    console.log("In playHandler() about to play ostadigt");
     playOstadigt();
   }
 
 }
 
 function playVackert(){
+    console.log("Playing vackert");
     anim.goToAndStop(vackertInFrame, true);
     setTimeout(function(){ anim.goToAndPlay(vackertInFrame, true); }, 4000);    
 }
 
 function playRegn(){
+  console.log("Playing regn");
   anim.goToAndStop(regnInFrame, true);
   setTimeout(function(){ anim.goToAndPlay(regnInFrame, true); }, 3000);
 }
 
 function playOstadigt(){
+  console.log("Playing ostadigt");
   anim.goToAndPlay(ostadigtInFrame, true);
 }
 
-function setCurrentTime(){
-  currentTime = day()+ '' + hour()  +'' + minute() ;
-}
-
-function getCurrentTime(){
-  return currentTime;
-}

@@ -35,6 +35,7 @@ function preload(){
 function setup() {
 
 sound.play();
+sound.setVolume(0.5);
 sound.setLoop(true);
 
 loadAnim();
@@ -56,7 +57,7 @@ else if(i==ostadigtFlag){
 
 function draw(){
 
-
+/*
 if((anim.currentFrame > vackertOutFrame) && (i==0)){
   anim.goToAndPlay(vackertInFrame, true);
 }
@@ -66,7 +67,7 @@ else if((anim.currentFrame > regnOutFrame) && (i==1)){
 else if((anim.currentFrame > ostadigtOutFrame) && (i==2)){
   anim.goToAndPlay(ostadigtInFrame, true);
 }
-
+*/
 
 }
 
