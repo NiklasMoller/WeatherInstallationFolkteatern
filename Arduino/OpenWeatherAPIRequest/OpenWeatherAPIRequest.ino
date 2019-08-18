@@ -60,18 +60,34 @@ void setup() {
 
   Serial.begin(9600);
 
-
-  servo.attach(2); // attaches the servo on GPIO2 to the servo object
-  delay(500);
   int servoPos;
-  servo.write(defaultPosition);
-  Serial.println("SETTING POINTER TO DEFAULT POSITION");
-  Serial.println();
 
   buckets = (sizeof(rtcMem) / 4);
-
   if (buckets == 0) buckets = 1;
- 
+
+  system_rtc_mem_read(RTCMEMORYPOS, &rtcMem, sizeof(rtcMem));
+  servoPos = rtcMem.previousPosition;
+
+  Serial.print("READING FROM RTC MEMORY. POSITION IS: ");
+  Serial.println(servoPos);
+  Serial.println();
+
+    servo.attach(2); // attaches the servo on GPIO2 to the servo object
+    delay(500);
+    
+    if((!servoPos == NULL) && (servoPos < 180)){
+        Serial.println();
+        Serial.println("Writing servo to RTC MEMORY POSITION");
+        servo.write(servoPos);
+        Serial.println();
+      }
+      else{
+      Serial.println();
+      Serial.println("Writing to default position 90");
+      Serial.println();
+      servo.write(defaultPosition);
+    }
+  
   text.reserve(JSON_BUFF_DIMENSION);
   
   WiFi.begin(ssid,pass);
@@ -85,15 +101,12 @@ void setup() {
 
   pressure = 0;
 
-
-
   makehttpRequest();
 
   Serial.print("PRESSURE IN MERCURY IS ");
   Serial.println(getPressureMercury());
   delay(1000);
  
-
   if(getPressureMercury() > 730){
     rtcMem.previousPosition = getServoPosition();
     servoPos = getServoPosition();
@@ -103,27 +116,6 @@ void setup() {
     Serial.print("GOT DATA FROM OPEN WEATHERMAP AND PUT SERVOPOSITION TO ");
     Serial.println(servoPos);
     Serial.println();
-    
-  }else{
-
-    system_rtc_mem_read(RTCMEMORYPOS, &rtcMem, sizeof(rtcMem));
-
-    servoPos = rtcMem.previousPosition;
-
-    Serial.print("READING FROM RTC MEMORY. POSITION IS: ");
-    Serial.println(servoPos);
-        Serial.println();
-    
-    if(!servoPos == NULL){
-      if(servoPos < 180){ //Nesting if's for saftey
-        servo.write(servoPos);
-      }        
-    }else{
-      Serial.println();
-      Serial.println("Writing to default position 90");
-      Serial.println();
-      servo.write(defaultPosition);
-    }
     
   }
 
@@ -139,47 +131,11 @@ void loop() {
 /*
   if (millis() - lastConnectionTime > postInterval) {
     // note the time that the connection was made:
-    Serial.println("WENT INTO IF STATEMENT");
     lastConnectionTime = millis();
     makehttpRequest();
   }
 */
 
-
-/*
-    Serial.print("PREASSURE IS: ");
-    Serial.println(getPressure());
-
-    do{
-      makehttpRequest();
-    }while(getPressure() == 0);
-    
-    Serial.print("PREASSURE IS: ");
-    Serial.println(getPressure());
-
-
-    Serial.print("PRESSURE IN MERCERY IS: ");
-    Serial.println(getPressureMercury());
-
-    int positionS = getServoPosition();
-    String pos = String(positionS);
-    
-    Serial.println("---DELAY---");
-    delay(5000);
-    Serial.print("WRITING SERVO TO POSITION: ");
-    Serial.println(pos);
-
-    Serial.println("---DELAY---");
-    delay(10000);
-    Serial.println("Ready to write");
-    servo.write(positionS);
-    Serial.println("---DELAY---");
-    delay(20000);
-    //Serial.println("I'm awake but now I will sleep. GOODNIGHT!");
-    //ESP.deepSleep(12e6, WAKE_RF_DEFAULT);
-    delay(2000);
-
-    */
     
 }
 

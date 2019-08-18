@@ -34,6 +34,8 @@ function preload(){
 
 function setup() {
 
+//background(200);
+
 sound.play();
 sound.setVolume(0.5);
 sound.setLoop(true);
@@ -71,9 +73,14 @@ else if((anim.currentFrame > ostadigtOutFrame) && (i==2)){
 
 }
 
+
 function mousePressed() {
-  i = 0;
+    console.log("MOUSE PRESSED");
+    let fs = fullscreen();
+    fullscreen(!fs);
+  
 }
+
 
 function loadAnim(){
   anim = bodymovin.loadAnimation(animData);
