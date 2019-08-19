@@ -3,15 +3,18 @@ var link = "https://opendata-download-metanalys.smhi.se/api/category/mesan1g/ver
 var pressure, sound, anim, animData, stateflag, loopCounter, weatherData, counter;
 
 const vackertInFrame = 0;
-const vackertOutFrame = 1190;
+const vackertOutFrame = 1180;
 
 const regnInFrame = 1160;
-const regnOutFrame = 2230;
+const regnOutFrame = 2180;
 
-const ostadigtInFrame = 2160;
-const ostadigtOutFrame = 3400;
+const ostadigtInFrame = 2150;
+const ostadigtOutFrame = 3450;
 
-const endFrame = 3500;
+const endFrame = 3550;
+
+const regnThreshold = 749;
+const vackertThreshold = 771;
 
 const regnFlag = 1;
 const ostadigtFlag = 2;
@@ -29,7 +32,7 @@ function preload(){
     renderer: 'svg',
     loop: true,
     autoplay: false,
-    path: 'laterFinal5aug.json'
+    path: '19aug.json'
     };
 
     loadWeatherData();
@@ -94,12 +97,6 @@ function update(){
   setTimeout(function(){ setStateflag(); }, 5000);
 }
 
-/*
-function mousePressed() {
-  fullscreen();
-}
-*/
-
 function loadAnim(){
   anim = bodymovin.loadAnimation(animData);
 }
@@ -123,7 +120,7 @@ if(counter > 22){
   break;
 }
 
-}while(pressure < 1);
+}while(pressure < 500);
 
 console.log("Pressure set to " + pressure);
 console.log("Weather Data is from " + counter + " hour ago");
@@ -135,10 +132,10 @@ function getPressure(){
 }
 
 function setStateflag(){
-  if(getPressure() < 749){
+  if(getPressure() < regnThreshold){
     stateflag = regnFlag;
   }
-  else if (getPressure() > 771){
+  else if (getPressure() > vackertThreshold){
     stateflag = vackertFlag;
   }else{
     stateflag = ostadigtFlag;
