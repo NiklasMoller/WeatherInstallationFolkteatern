@@ -9,9 +9,9 @@ const regnInFrame = 1160;
 const regnOutFrame = 2180;
 
 const ostadigtInFrame = 2150;
-const ostadigtOutFrame = 3450;
+const ostadigtOutFrame = 4000;
 
-const endFrame = 3550;
+const endFrame = 4100;
 
 const regnThreshold = 749;
 const vackertThreshold = 771;
